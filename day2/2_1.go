@@ -20,14 +20,13 @@ func getValidPswds(filename string) (result int) {
 	for scanner.Scan() {
 		// retrieve the string
 		parts := strings.Split(scanner.Text(), ": ")
-		str := []rune(parts[1])
+		str := parts[1]
 
 		// in the policy, retrieve the letter
 		policy := strings.Split(parts[0], " ")
-		letter := []rune(policy[1])
+		letter := policy[1]
 
-		// retrieve the indices
-		// no concept of "index 0" so i will -1
+		// retrieve the ranges
 		nums := strings.Split(policy[0], "-")
 		bot, err := strconv.Atoi(nums[0])
 		if err != nil {
@@ -37,15 +36,11 @@ func getValidPswds(filename string) (result int) {
 		if err != nil {
 			fmt.Println(err.Error())
 		}
-		bot--
-		top--
 
-		// check both indices
-		isBot := str[bot] == letter[0]
-		isTop := str[top] == letter[0]
-
-		// XOR them
-		if isBot != isTop {
+		// count how many times the letter appears
+		// probably could've done this with a for and runes instead?
+		curCount := strings.Count(str, letter)
+		if curCount >= bot && curCount <= top {
 			result++
 		}
 	}
@@ -59,7 +54,7 @@ func getValidPswds(filename string) (result int) {
 }
 
 func main() {
-	filename := "../input"
+	filename := "input"
 	result := getValidPswds(filename)
 	fmt.Println(result)
 }
